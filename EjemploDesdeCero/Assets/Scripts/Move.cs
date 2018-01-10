@@ -7,6 +7,7 @@ public class Move : MonoBehaviour {
     public float speed = 1f;
     Rigidbody rigidbody;
     public float forceValue = 0.1f;
+    public float jumpValue = 0.02f;
 
 	// Use this for initialization
 	void Start () {
@@ -16,6 +17,11 @@ public class Move : MonoBehaviour {
 	//Se usa para el movimiento cinematico, una vez por frame.
 	void Update () {
         //transform.Translate(Input.GetAxis("Horizontal") * speed * Time.deltaTime, 0, Input.GetAxis("Vertical") * speed * Time.deltaTime); //Imput devuelve un valor entre -1 y 1 dependiendo de la tecla pulsada para un eje.
+        if (Input.GetButtonDown("Jump") && Mathf.Abs(rigidbody.velocity.y) < 0.01f)
+        {
+            rigidbody.AddForce(Vector3.up * jumpValue, ForceMode.Impulse);
+        }
+        
 	}
 
     //Se usa para el movimiento fisico, no depende de los fps
