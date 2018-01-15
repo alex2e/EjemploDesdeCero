@@ -2,31 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Move : MonoBehaviour {
-
-    public float speed = 1f;
+public class Move : MonoBehaviour
+{
+    public float forcevalue = 0.1f;
+    public float jumpvalue = 0.1f;
     Rigidbody rigidbody;
-    public float forceValue = 0.1f;
-    public float jumpValue = 0.02f;
+    private AudioSource audiosource;
 
-	// Use this for initialization
-	void Start () {
-        rigidbody = GetComponent<Rigidbody>(); //Cogemos la referencia al Rigibody	
-	}
-	
-	//Se usa para el movimiento cinematico, una vez por frame.
-	void Update () {
-        //transform.Translate(Input.GetAxis("Horizontal") * speed * Time.deltaTime, 0, Input.GetAxis("Vertical") * speed * Time.deltaTime); //Imput devuelve un valor entre -1 y 1 dependiendo de la tecla pulsada para un eje.
+    // Use this for initialization
+    void Start()
+    {
+        rigidbody = GetComponent<Rigidbody>();
+        audiosource = GetComponent<AudioSource>();
+    }
+
+    // Para los movimientos cinemáticos, se actualiza por cada frame.
+    void Update()
+    {
         if (Input.GetButtonDown("Jump") && Mathf.Abs(rigidbody.velocity.y) < 0.01f)
         {
-            rigidbody.AddForce(Vector3.up * jumpValue, ForceMode.Impulse);
+            //Con el ForceMode, en lugar de aplicarle una fuerza como cuando se mueve, es un impulso.
+            rigidbody.AddForce(Vector3.up * jumpvalue, ForceMode.Impulse);
+            audiosource.Play();
         }
-        
-	}
+    }
 
-    //Se usa para el movimiento fisico, no depende de los fps
-    void FixedUpdate() 
+    //Se utiliza para las fuerzas físicas.
+    private void FixedUpdate()
     {
-        rigidbody.AddForce(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * forceValue);
+        rigidbody.AddForce(new Vector3(Input.GetAxis("Horizontal"), 0
+            , Input.GetAxis("Vertical")) * forcevalue);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        //Si ha chocado con un cubo...
+        if (collision.gameObject.tag == "Cubo")
+        {
+            print("Colision con cubo");
+            Destroy(collision.gameObject);
+        }
     }
 }
