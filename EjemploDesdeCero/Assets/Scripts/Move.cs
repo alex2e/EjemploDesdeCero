@@ -10,6 +10,7 @@ public class Move : MonoBehaviour
     private AudioSource audiosource;
     private GameObject capsules;
     public GameObject prefab;
+    private Color capsuleColor;
 
     // Use this for initialization
     void Start()
@@ -48,8 +49,9 @@ public class Move : MonoBehaviour
         //Si ha chocado con una capsula...
         if (collision.gameObject.tag == "Capsule")
         {
-            collision.gameObject.GetComponent<MeshRenderer>().material.color *= 1.2f;
-            //collision.gameObject.GetComponent<MeshRenderer>().material.SetColor("Negro", new Color(0.2F, 0.3F, 0.4F, 0.5F));
+            //collision.gameObject.GetComponent<MeshRenderer>().material.color *= 1.2f;
+            capsuleColor = collision.gameObject.GetComponent<MeshRenderer>().material.GetColor("_Color");
+            collision.gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.black);
             collision.gameObject.GetComponent<AudioSource>().Play();
         }
     }
@@ -65,7 +67,8 @@ public class Move : MonoBehaviour
         //Si ha chocado con una capsula...
         if (collision.gameObject.tag == "Capsule")
         {
-            collision.gameObject.GetComponent<MeshRenderer>().material.color /= 1.2f;
+            //collision.gameObject.GetComponent<MeshRenderer>().material.color /= 1.2f;
+            collision.gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color", capsuleColor);
         }
 
     }
@@ -81,7 +84,7 @@ public class Move : MonoBehaviour
             }
         }
 
-        //Crea capsula aleatoria
-        Instantiate(prefab, new Vector3(Random.Range(-10.0f, 10.0f), 0, Random.Range(-10.0f, 10.0f)), Quaternion.identity);
+        //Crea capsula aleatori
+        Instantiate(prefab, new Vector3(Random.Range(-10.0f, 10.0f), 0.5f , Random.Range(-10.0f, 10.0f)), Quaternion.identity);
     }
 }
